@@ -55,7 +55,7 @@ handle_http () {
 		done
 		echo -e "" >> "$FRONT_FILE"
 
-		if [[ ! -z "$location" ]] ; then
+		if [[ ${id:0:8} == "$REDIRECT_PREFIX" ]] ; then
 			echo "$REDIRECT" >> "$FRONT_FILE"
 
 			sed -i "s/%id%/$id/g" "$FRONT_FILE"
