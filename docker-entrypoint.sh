@@ -73,10 +73,10 @@ handle_http () {
 		BACK_FILE="$HAPROXY_CFG_DIR"/conf.d/$((index + 500))-"$id"
 
 		echo -n "$BACKEND_START" > "$BACK_FILE"
-		if [[ "$host" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-			echo "$BACKEND_RESOLVER" >> "$BACK_FILE"
-		else
+		if [[ "$service" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+ ]]; then
 			echo "" >> "$BACK_FILE"
+		else
+			echo "$BACKEND_RESOLVER" >> "$BACK_FILE"
 		fi
 		echo "$BACKEND_HEADER_FORWARDED" >> "$BACK_FILE"
 
