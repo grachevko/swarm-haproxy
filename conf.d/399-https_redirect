@@ -1,0 +1,3 @@
+
+	acl http	  ssl_fc,not
+	use_backend redirect_to_https_backend if http

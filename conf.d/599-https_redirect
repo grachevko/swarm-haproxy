@@ -1,0 +1,3 @@
+backend redirect_to_https_backend
+	mode http
+	http-request redirect code 301 scheme https

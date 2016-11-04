@@ -1,0 +1,14 @@
+defaults
+	log	global
+	mode	tcp
+	option	tcplog
+	option  dontlognull
+	option  redispatch
+	option http-server-close
+	option forwardfor
+	retries 3
+	timeout connect 5000
+	timeout client 50000
+	timeout server 50000
+	unique-id-format %{+X}o\ %ci:%cp_%fi:%fp_%Ts_%rt:%pid
+	unique-id-header X-Request-ID
