@@ -5,7 +5,7 @@ ACL_HOST=" hdr(host) -i %host%"
 ACL_PATH=" path_beg %host%"
 USE_BACKEND="	use_backend %id%_backend if %id%"
 
-REDIRECT="	http-request redirect code %code% scheme %scheme% prefix https:// location %location% if %id%"
+REDIRECT="	http-request redirect code %code% scheme %scheme% location %location% if %id%"
 
 BACKEND_START="backend %id%_backend
 	mode http
@@ -58,15 +58,15 @@ handle_http () {
 		if [[ ${id:0:8} == "$REDIRECT_PREFIX" ]] ; then
 			echo "$REDIRECT" >> "$FRONT_FILE"
 
-			sed -i "s/%id%/$id/g" "$FRONT_FILE"
-			sed -i "s/%location%/$location/g" "$FRONT_FILE"
-			sed -i "s/%code%/$code/g" "$FRONT_FILE"
-			sed -i "s/%scheme%/$scheme/g" "$FRONT_FILE"
+			sed -i "s~%id%~$id~g" "$FRONT_FILE"
+			sed -i "s~%location%~$location~g" "$FRONT_FILE"
+			sed -i "s~%code%~$code~g" "$FRONT_FILE"
+			sed -i "s~%scheme%~$scheme~g" "$FRONT_FILE"
 
 			continue
 		else
 			echo "$USE_BACKEND" >> "$FRONT_FILE"
-			sed -i "s/%id%/$id/g" "$FRONT_FILE"
+			sed -i "s~%id%~$id~g" "$FRONT_FILE"
 		fi
 
 	### Backend
