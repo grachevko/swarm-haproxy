@@ -15,4 +15,5 @@ docker service create \
 	--env HTTPS_nginx=nginx.local,127.0.0.1:80 \
 	--env HTTPS_REDIRECT_www=www.nginx.local;nginx.local;301;https \
 	--mount type=volume,source=HAPROXY_CERTS,destination=/usr/local/etc/haproxy/certs \
-	grachev/swarm_haproxy
+	grachev/swarm-haproxy
+```
