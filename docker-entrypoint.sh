@@ -5,7 +5,7 @@ ACL_HOST=" hdr(host) -i %host%"
 ACL_PATH=" path_beg %host%"
 USE_BACKEND="	use_backend %id%_backend if %id%"
 
-REDIRECT="	http-request redirect code %code% scheme %scheme% location %location% if %id%"
+REDIRECT="	http-request redirect code %code% scheme %scheme% prefix https:// location %location% if %id%"
 
 BACKEND_START="backend %id%_backend
 	mode http
