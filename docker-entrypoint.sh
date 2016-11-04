@@ -90,4 +90,4 @@ handle_http HTTPS_ 400 REDIRECT
 
 cat "$HAPROXY_CFG_DIR"/conf.d/* > "$HAPROXY_CFG_DIR"/haproxy.cfg
 
-exec "$@"
+exec /docker-entrypoint.sh "$@"
