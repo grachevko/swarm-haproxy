@@ -64,7 +64,7 @@ handle_http () {
 		if [[ ${id:0:8} == "$REDIRECT_PREFIX" ]] ; then
 			echo "$REDIRECT" >> "$FRONT_FILE"
 
-			sed -i "s~%id%~$id~g" "$FRONT_FILE"
+			sed -i "s~%id%~"$id"_1~g" "$FRONT_FILE" // _1 костыль
 			sed -i "s~%location%~$location~g" "$FRONT_FILE"
 			sed -i "s~%code%~$code~g" "$FRONT_FILE"
 			sed -i "s~%scheme%~$scheme~g" "$FRONT_FILE"
