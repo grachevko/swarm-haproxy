@@ -47,6 +47,7 @@ handle_http () {
 		for host in "${HOSTS[@]}"; do
             ((host_index++))
 
+            negate=""
             if [[ ${host:0:1} == "!" ]] ; then
                 host=${host:1}
                 negate="!"
