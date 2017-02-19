@@ -47,13 +47,17 @@ handle_http () {
 		for host in "${HOSTS[@]}"; do
             ((host_index++))
 
-            condition="${condition} ${id}_${host_index}"
+            if [[ ${host:0:1} == "!" ]] ; then
+                host=${host:1}
+                negate="!"
+            fi
+            condition="${condition} ${negate}${id}_${host_index}"
 
             echo "" >> "$FRONT_FILE"
 			if [[ ${host:0:1} == "/" ]] ; then
-				echo "$ACL_PATH" >> "$FRONT_FILE"
+				echo -n "$ACL_PATH" >> "$FRONT_FILE"
 			else
-				echo "$ACL_HOST" >> "$FRONT_FILE"
+				echo -n "$ACL_HOST" >> "$FRONT_FILE"
 			fi
 
 			sed -i "s~%id%~"$id"_"$host_index"~g" "$FRONT_FILE"
@@ -97,4 +101,5 @@ handle_http HTTPS_ 400 REDIRECT
 
 cat "$HAPROXY_CFG_DIR"/conf.d/* > "$HAPROXY_CFG_DIR"/haproxy.cfg
 
+cat "$HAPROXY_CFG_DIR"/haproxy.cfg
 exec /docker-entrypoint.sh "$@"
