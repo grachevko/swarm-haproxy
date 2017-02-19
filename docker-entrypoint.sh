@@ -1,9 +1,8 @@
 #!/bin/bash
 
-ACL_START="	acl %id%"
-ACL_HOST=" hdr(host) -i %host%"
-ACL_PATH=" path_beg %host%"
-USE_BACKEND="	use_backend %id%_backend if %id%"
+ACL_HOST="	acl %id% hdr(host) -i %host%"
+ACL_PATH="	acl %id% path_beg -i %host%"
+USE_BACKEND="	use_backend %id%_backend if %condition%"
 
 REDIRECT="	http-request redirect code %code% scheme %scheme% location %location% if %id%"
 
@@ -42,15 +41,22 @@ handle_http () {
 	### Frontend
 		FRONT_FILE="$HAPROXY_CFG_DIR"/conf.d/$((index + FILE_PREFIX))-"$id"
 
-		echo -ne "\n$ACL_START" > "$FRONT_FILE"
 		IFS=',' read -ra HOSTS <<< "$hosts"
+		host_index=0
+		condition=""
 		for host in "${HOSTS[@]}"; do
+            ((host_index++))
+
+            condition="${condition} ${id}_${host_index}"
+
+            echo "" >> "$FRONT_FILE"
 			if [[ ${host:0:1} == "/" ]] ; then
-				echo -n "$ACL_PATH" >> "$FRONT_FILE"
+				echo "$ACL_PATH" >> "$FRONT_FILE"
 			else
-				echo -n "$ACL_HOST" >> "$FRONT_FILE"
+				echo "$ACL_HOST" >> "$FRONT_FILE"
 			fi
 
+			sed -i "s~%id%~"$id"_"$host_index"~g" "$FRONT_FILE"
 			sed -i "s~%host%~$host~g" "$FRONT_FILE"
 		done
 		echo -e "" >> "$FRONT_FILE"
@@ -67,6 +73,7 @@ handle_http () {
 		else
 			echo "$USE_BACKEND" >> "$FRONT_FILE"
 			sed -i "s~%id%~$id~g" "$FRONT_FILE"
+			sed -i "s~%condition%~$condition~g" "$FRONT_FILE"
 		fi
 
 	### Backend
