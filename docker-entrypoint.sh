@@ -29,8 +29,9 @@ handle_http () {
 			IFS=';' read hosts location code scheme <<< "$options"
 		else
 			IFS=';' read hosts service <<< "$options"
+			IFS=':' read host port <<< "$service"
 
-			if ! ping -c 1 "$service" &> /dev/null
+			if ! nslookup "$host" 127.0.0.11 &> /dev/null
 			then
 			    >&2 echo service host \""$service"\" is unreachable and will be skipped
 
