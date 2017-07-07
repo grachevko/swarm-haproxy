@@ -108,7 +108,7 @@ if env | fgrep HTTP_ > /dev/null; then
 fi
 
 if env | fgrep HTTPS_ > /dev/null; then
-    ${FRONTEND_HTTPS} > ${HAPROXY_CFG_DIR}/conf.d/400-frontend_https
+    echo "${FRONTEND_HTTPS}" > ${HAPROXY_CFG_DIR}/conf.d/400-frontend_https
     handle_http HTTPS_ 400 REDIRECT
 fi
 
