@@ -6,6 +6,11 @@ USE_BACKEND="	use_backend %id%_backend if %condition%"
 
 REDIRECT="	http-request redirect code %code% scheme %scheme% location %location% if %id%"
 
+FRONTEND_HTTPS="frontend https_frontend
+	bind *:443  ssl crt /usr/local/etc/haproxy/certs
+	mode http
+	monitor-uri /healthcheck"
+
 BACKEND_START="backend %id%_backend
 	mode http
 	server %id%_server %service%"
@@ -99,7 +104,11 @@ handle_http () {
 }
 
 handle_http HTTP_ 300 REDIRECT
-handle_http HTTPS_ 400 REDIRECT
+
+if env | fgrep HTTPS_; then
+    ${FRONTEND_HTTPS} > ${HAPROXY_CFG_DIR}/conf.d/400-frontend_https
+    handle_http HTTPS_ 400 REDIRECT
+fi
 
 cat "$HAPROXY_CFG_DIR"/conf.d/* > "$HAPROXY_CFG_DIR"/haproxy.cfg
 
