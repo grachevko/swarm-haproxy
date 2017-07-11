@@ -83,7 +83,7 @@ handle_http () {
 			continue
 		else
 			echo "$USE_BACKEND" >> "$FRONT_FILE"
-			sed -i "s~%id%~$id~g" "$FRONT_FILE"
+			sed -i "s~%id%~$ENV_PREFIX$id~g" "$FRONT_FILE"
 			sed -i "s~%condition%~$condition~g" "$FRONT_FILE"
 		fi
 
@@ -98,7 +98,7 @@ handle_http () {
 		fi
 		echo "$BACKEND_HEADER_FORWARDED" >> "$BACK_FILE"
 
-		sed -i "s~%id%~$id~g" "$BACK_FILE"
+		sed -i "s~%id%~$ENV_PREFIX$id~g" "$BACK_FILE"
 		sed -i "s~%service%~$service~g" "$BACK_FILE"
 	done
 }
