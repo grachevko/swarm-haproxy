@@ -18,12 +18,12 @@ BACKEND_RESOLVER=" resolvers dns check inter 1000"
 BACKEND_HEADER_FORWARDED="	http-request add-header X-Forwarded-Proto https if { ssl_fc }
 	http-request set-header X-Forwarded-Port %[dst_port] if { ssl_fc }"
 
+index=0
 handle_http () {
 	ENV_PREFIX=$1
 	FILE_PREFIX=$2
 	REDIRECT_PREFIX=$3
 
-	index=0
 	for i in `env | fgrep "$ENV_PREFIX"`; do
 		((index++))
 
