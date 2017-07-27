@@ -2,3 +2,4 @@ frontend http_frontend
 	bind *:80
 	mode http
 	monitor-uri /healthcheck
+	reqadd X-Forwarded-Proto:\ http

@@ -11,7 +11,8 @@ REDIRECT="	http-request redirect code %code% scheme %scheme% location %location%
 FRONTEND_HTTPS="frontend https_frontend
 	bind *:443  ssl crt /usr/local/etc/haproxy/certs
 	mode http
-	monitor-uri /healthcheck"
+	monitor-uri /healthcheck
+	reqadd X-Forwarded-Proto:\ https"
 
 BACKEND_START="backend %id%_backend
 	mode http
