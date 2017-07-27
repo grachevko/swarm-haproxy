@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 ACL_HOST="	acl %id% hdr(host) -i %host%"
 ACL_PATH="	acl %id% path_beg -i %host%"
 USE_BACKEND="	use_backend %id%_backend if %condition%"
@@ -17,6 +19,15 @@ BACKEND_START="backend %id%_backend
 BACKEND_RESOLVER=" resolvers dns check inter 1000"
 BACKEND_HEADER_FORWARDED="	http-request add-header X-Forwarded-Proto https if { ssl_fc }
 	http-request set-header X-Forwarded-Port %[dst_port] if { ssl_fc }"
+
+REDIRECT_ALL_TO_HTTPS_FRONTEND="
+	acl http	  ssl_fc,not
+	use_backend redirect_to_https_backend if http"
+
+REDIRECT_ALL_TO_HTTPS_BACKEND="
+	backend redirect_to_https_backend
+	mode http
+	http-request redirect code 301 scheme https"
 
 handle_host () {
 	ENV_PREFIX=$1
@@ -48,7 +59,7 @@ handle_host () {
     host_index=0
     condition=""
     for host in "${HOSTS[@]}"; do
-        ((host_index++))
+        host_index=$((host_index + 1))
 
         negate=""
         if [[ ${host:0:1} == "!" ]] ; then
@@ -105,8 +116,8 @@ handle_http () {
 	FILE_PREFIX=$2
 	REDIRECT_PREFIX=$3
 
-	for i in `env | fgrep "$ENV_PREFIX"`; do
-		((index++))
+	for i in `env | grep "^$ENV_PREFIX"`; do
+		index=$((index + 1))
 
         handle_host ${ENV_PREFIX} ${FILE_PREFIX} ${REDIRECT_PREFIX} ${index} &
 	done
@@ -121,6 +132,11 @@ fi
 if env | fgrep HTTPS_ > /dev/null; then
     echo "${FRONTEND_HTTPS}" > ${HAPROXY_CFG_DIR}/conf.d/400-frontend_https
     handle_http HTTPS_ 400 REDIRECT
+fi
+
+if [ "$REDIRECT_ALL_TO_HTTPS" == "true" ]; then
+    echo "${REDIRECT_ALL_TO_HTTPS_FRONTEND}" > "${HAPROXY_CFG_DIR}"/conf.d/399-https_redirect
+    echo "${REDIRECT_ALL_TO_HTTPS_BACKEND}" > "${HAPROXY_CFG_DIR}"/conf.d/399-https_redirect
 fi
 
 cat "$HAPROXY_CFG_DIR"/conf.d/* > "$HAPROXY_CFG_DIR"/haproxy.cfg
