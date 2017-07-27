@@ -75,24 +75,19 @@ handle_host () {
             echo -n "$ACL_HOST" >> "$FRONT_FILE"
         fi
 
-        sed -i "s~%id%~"$id"_"$host_index"~g" "$FRONT_FILE"
-        sed -i "s~%host%~$host~g" "$FRONT_FILE"
+        sed -i "s~%id%~"$id"_"$host_index"~g;s~%host%~$host~g" "$FRONT_FILE"
     done
     echo -e "" >> "$FRONT_FILE"
 
     if [[ ${id:0:8} == "$REDIRECT_PREFIX" ]] ; then
         echo "$REDIRECT" >> "$FRONT_FILE"
 
-        sed -i "s~%id%~"$id"_1~g" "$FRONT_FILE" // _1 костыль
-        sed -i "s~%location%~$location~g" "$FRONT_FILE"
-        sed -i "s~%code%~$code~g" "$FRONT_FILE"
-        sed -i "s~%scheme%~$scheme~g" "$FRONT_FILE"
+        sed -i "s~%id%~"$id"_1~g;s~%location%~$location~g;s~%code%~$code~g;s~%scheme%~$scheme~g" "$FRONT_FILE" // _1 костыль
 
         continue
     else
         echo "$USE_BACKEND" >> "$FRONT_FILE"
-        sed -i "s~%id%~$ENV_PREFIX$id~g" "$FRONT_FILE"
-        sed -i "s~%condition%~$condition~g" "$FRONT_FILE"
+        sed -i "s~%id%~$ENV_PREFIX$id~g;s~%condition%~$condition~g" "$FRONT_FILE"
     fi
 
 	### Backend
@@ -106,8 +101,7 @@ handle_host () {
     fi
     echo "$BACKEND_HEADER_FORWARDED" >> "$BACK_FILE"
 
-    sed -i "s~%id%~$ENV_PREFIX$id~g" "$BACK_FILE"
-    sed -i "s~%service%~$service~g" "$BACK_FILE"
+    sed -i "s~%id%~$ENV_PREFIX$id~g;s~%service%~$service~g" "$BACK_FILE"
 }
 
 index=0
