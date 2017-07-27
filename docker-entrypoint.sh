@@ -136,7 +136,7 @@ fi
 
 if [ "$REDIRECT_ALL_TO_HTTPS" == "true" ]; then
     echo "${REDIRECT_ALL_TO_HTTPS_FRONTEND}" > "${HAPROXY_CFG_DIR}"/conf.d/3999-https_redirect
-    echo "${REDIRECT_ALL_TO_HTTPS_BACKEND}" > "${HAPROXY_CFG_DIR}"/conf.d/3999-https_redirect
+    echo "${REDIRECT_ALL_TO_HTTPS_BACKEND}" > "${HAPROXY_CFG_DIR}"/conf.d/5999-https_redirect
 fi
 
 cat "$HAPROXY_CFG_DIR"/conf.d/* > "$HAPROXY_CFG_DIR"/haproxy.cfg
