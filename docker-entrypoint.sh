@@ -96,7 +96,7 @@ handle_host () {
     fi
 
 	### Backend
-    BACK_FILE="$HAPROXY_CFG_DIR"/conf.d/$((index + 500))-"$id"
+    BACK_FILE="$HAPROXY_CFG_DIR"/conf.d/$((index + 5000))-"$id"
 
     echo -n "$BACKEND_START" > "$BACK_FILE"
     if [[ "$service" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+ ]]; then
@@ -126,17 +126,17 @@ handle_http () {
 }
 
 if env | fgrep HTTP_ > /dev/null; then
-    handle_http HTTP_ 300 REDIRECT
+    handle_http HTTP_ 3000 REDIRECT
 fi
 
 if env | fgrep HTTPS_ > /dev/null; then
     echo "${FRONTEND_HTTPS}" > ${HAPROXY_CFG_DIR}/conf.d/400-frontend_https
-    handle_http HTTPS_ 400 REDIRECT
+    handle_http HTTPS_ 4000 REDIRECT
 fi
 
 if [ "$REDIRECT_ALL_TO_HTTPS" == "true" ]; then
-    echo "${REDIRECT_ALL_TO_HTTPS_FRONTEND}" > "${HAPROXY_CFG_DIR}"/conf.d/399-https_redirect
-    echo "${REDIRECT_ALL_TO_HTTPS_BACKEND}" > "${HAPROXY_CFG_DIR}"/conf.d/399-https_redirect
+    echo "${REDIRECT_ALL_TO_HTTPS_FRONTEND}" > "${HAPROXY_CFG_DIR}"/conf.d/3999-https_redirect
+    echo "${REDIRECT_ALL_TO_HTTPS_BACKEND}" > "${HAPROXY_CFG_DIR}"/conf.d/3999-https_redirect
 fi
 
 cat "$HAPROXY_CFG_DIR"/conf.d/* > "$HAPROXY_CFG_DIR"/haproxy.cfg
