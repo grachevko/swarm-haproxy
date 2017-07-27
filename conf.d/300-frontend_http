@@ -2,5 +2,3 @@ frontend http_frontend
 	bind *:80
 	mode http
 	monitor-uri /healthcheck
-
-	http-request redirect code 301 prefix http://%[hdr(host),regsub(^www\.,,i)] if { hdr_beg(host) -i www. }
