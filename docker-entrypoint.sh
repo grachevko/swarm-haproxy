@@ -111,7 +111,7 @@ handle_http () {
 	FILE_PREFIX=$2
 	REDIRECT_PREFIX=$3
 
-	for i in `env | grep "^$ENV_PREFIX"`; do
+	for i in `env | sort | grep "^$ENV_PREFIX"`; do
 		index=$((index + 1))
 
         handle_host ${ENV_PREFIX} ${FILE_PREFIX} ${REDIRECT_PREFIX} ${index} &
